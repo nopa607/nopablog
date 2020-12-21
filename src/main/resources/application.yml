@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: dev
+
+server:
+  port: 8081
+
+mybatis-plus:
+  type-aliases-package: com.csu.nopablog.entity
+  global-config:
+    db-config:
+      table-underline: true
+      db-type: mysql
+  mapper-locations: classpath:mappering/*.xml
+
