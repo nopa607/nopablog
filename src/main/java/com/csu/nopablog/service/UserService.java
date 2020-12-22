@@ -1,6 +1,7 @@
 package com.csu.nopablog.service;
 
 import com.csu.nopablog.entity.UserEntity;
+import com.csu.nopablog.entity.VO.UsersVOEntity;
 
 /**
  * @Author: nopa
@@ -9,4 +10,6 @@ import com.csu.nopablog.entity.UserEntity;
  */
 public interface UserService {
     UserEntity findUserMess(String username);
+
+    UsersVOEntity findUsersByPhone(String phone);
 }
