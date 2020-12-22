@@ -14,6 +14,7 @@ import java.io.Serializable;
  * @Date: Create in 10:47 2020/12/21
  */
 public class CustomSessionManager extends DefaultWebSessionManager {
+
     private static final String AUTHORIZATION = "token";
 
     public CustomSessionManager() {

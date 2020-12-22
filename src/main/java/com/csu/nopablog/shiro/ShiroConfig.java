@@ -3,6 +3,8 @@ package com.csu.nopablog.shiro;
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.realm.SimpleAccountRealm;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -14,6 +16,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,6 +26,7 @@ import java.util.Map;
  * @Description:
  * @Date: Create in 10:38 2020/12/21
  */
+@Configuration
 public class ShiroConfig {
 
     @Value("${nopaBlog.shiro-redis.host}")
@@ -76,7 +80,7 @@ public class ShiroConfig {
      *
      * @return
      */
-    @Bean("redisCacheManager")
+    @Bean
     public RedisCacheManager redisCacheManager() {
         RedisCacheManager redisCacheManager = new RedisCacheManager();
         redisCacheManager.setRedisManager(getRedisManager());
@@ -98,21 +102,30 @@ public class ShiroConfig {
         return redisManager;
     }
 
+    /**
+     * shiro内置过滤器，实现权限拦截
+     * @return
+     */
     @Bean
     public ShiroFilterFactoryBean shiroFilter() {
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
-        bean.setSecurityManager(securityManager());
+//        bean.setSecurityManager(securityManager());
+        AuthRealm realm = new AuthRealm();
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(realm);
+        bean.setSecurityManager(securityManager);
         //设置默认拦截无登录用户的跳转页面
         bean.setLoginUrl("login");
-        //无资源权限时跳转的页面
-        bean.setUnauthorizedUrl("/");
+        //无资源权限时(未授权)跳转的页面
+//        bean.setUnauthorizedUrl("/");
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        filterChainDefinitionMap.put("/", "anon");    // authc --    认证(登录)才能使用
-        filterChainDefinitionMap.put("/user", "authc");
-        filterChainDefinitionMap.put("/editor", "roles[admin]");
-        filterChainDefinitionMap.put("/SuperAdmin", "roles[admin]");
-        filterChainDefinitionMap.put("/druid/**", "anon");  // anon -- 匿名访问
-        filterChainDefinitionMap.put("/**", "anon");
+//        filterChainDefinitionMap.put("/", "anon");    // authc --    认证(登录)才能使用
+//        filterChainDefinitionMap.put("/user", "authc");
+//        filterChainDefinitionMap.put("/editor", "roles[admin]");
+//        filterChainDefinitionMap.put("/SuperAdmin", "roles[admin]");
+//        filterChainDefinitionMap.put("/druid/**", "anon");  // anon -- 匿名访问
+//        filterChainDefinitionMap.put("/**", "anon");
+        filterChainDefinitionMap.put("/update", "authc");
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return bean;
     }
@@ -140,7 +153,7 @@ public class ShiroConfig {
         return authRealm;
     }
 
-
+    @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setSessionManager(sessionManager());
@@ -157,7 +170,7 @@ public class ShiroConfig {
      * @return
      */
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(@Qualifier("securityManager") SecurityManager manager) {
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager manager) {
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
         advisor.setSecurityManager(manager);
         return advisor;

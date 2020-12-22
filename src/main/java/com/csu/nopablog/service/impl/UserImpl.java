@@ -3,6 +3,7 @@ package com.csu.nopablog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.csu.nopablog.dao.UserDao;
 import com.csu.nopablog.entity.UserEntity;
+import com.csu.nopablog.entity.VO.UsersVOEntity;
 import com.csu.nopablog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,10 @@ public class UserImpl implements UserService {
         QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
         UserEntity userEntity = userDao.selectOne(queryWrapper.eq("username", username));
         return userEntity;
+    }
+
+    @Override
+    public UsersVOEntity findUsersByPhone(String phone) {
+        return null;
     }
 }

@@ -76,21 +76,18 @@ public class AuthRealm extends AuthorizingRealm {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
         //获取前端输入的手机号
         String phone = usernamePasswordToken.getUsername();
-        UsersVOEntity vo = userService.findUsersByPhone(phone);
-        if (vo == null) {
-            throw new UnknownAccountException("该手机号不存在！");
-        } else {
+
+        UsersVOEntity vo = null;
+        try {
+            vo = userService.findUsersByPhone(phone);
             //当前realm对象的name
             String realmName = getName();
             //盐值
             ByteSource credentialsSalt = ByteSource.Util.bytes(vo.getPhone());
             SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(vo, vo.getPassword(), credentialsSalt, realmName);
             return info;
+        } catch (NullPointerException e) {
+            throw new UnknownAccountException("该手机号不存在！");
         }
-
-
-
-
-
     }
 }
