@@ -19,8 +19,8 @@ import java.util.Set;
 @TableName("roles")
 public class RoleVOEntity extends RoleEntity implements Serializable {
 
-    private static final long serialVersionUID = 2580746427363178805L;
 
+    private static final long serialVersionUID = 8693257124116587816L;
     /**
      * 当前角色所具备的权限
      */

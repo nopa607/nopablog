@@ -1,15 +1,12 @@
 package com.csu.nopablog.shiro;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.csu.nopablog.entity.PermissionEntity;
-import com.csu.nopablog.entity.RoleEntity;
 import com.csu.nopablog.entity.VO.RoleVOEntity;
 import com.csu.nopablog.entity.VO.UsersVOEntity;
 import com.csu.nopablog.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -17,7 +14,6 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
-import javax.swing.plaf.basic.BasicColorChooserUI;
 import java.util.*;
 
 /**

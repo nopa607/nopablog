@@ -1,5 +1,7 @@
 package com.csu.nopablog.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.csu.nopablog.service.RedisService;
 import com.csu.nopablog.shiro.ShiroMD5;
 import com.csu.nopablog.common.ustils.TimeUtil;
 import com.csu.nopablog.dao.UserDao;
@@ -19,29 +21,38 @@ import java.util.UUID;
 public class RegisterImpl implements RegisterService {
 
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
+
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public int insUsers(UserEntity user) {
+
         String uuid = UUID.randomUUID().toString();
         user.setId(uuid);
         user.setRoleId(2);
         user.setPassword(ShiroMD5.MD5(user.getUsername(), user.getPassword()).toString());
         String date = new TimeUtil().getFormatDateForThree();
         user.setLastTime(date);
-        //todo
-        // 需要将手机号和用户名存入缓存redis
+
+        // 将手机号和用户名存入缓存redis
+        redisService.savePhoneAndUsername(user.getPhone(), user.getUsername());
 
         return userDao.insert(user);
     }
 
     @Override
     public int findByPhone(String phone) {
-        return 0;
+        int res = userDao.selectCount(new QueryWrapper<UserEntity>().eq("phone", phone));
+        //todo 异步缓存
+        return res;
     }
 
     @Override
     public int findByUsername(String username) {
-        return 0;
+        int res = userDao.selectCount(new QueryWrapper<UserEntity>().eq("username", username));
+        //todo 异步缓存
+        return res;
     }
 }

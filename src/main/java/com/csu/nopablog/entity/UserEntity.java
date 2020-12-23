@@ -15,8 +15,10 @@ import java.io.Serializable;
 @Data
 @TableName("users")
 public class UserEntity implements Serializable {
-    private static final long serialVersionUID = 2091272315817336009L;
-    @TableId("id")
+
+    private static final long serialVersionUID = -4545395789994644313L;
+
+    @TableId
     private String id;
     private String username;
     private String password;

@@ -1,5 +1,6 @@
 var registerBtn = $("#register-btn");
 var phone = $("#phone");
+// 验证码
 var yan = $("#yan");
 var username = $("#username");
 var password = $("#password");
@@ -12,7 +13,7 @@ var noticeBox = $(".notice-box");
  * @type {string}
  */
 
-var myreg = /^1[3-578]\d{9}$/;
+var myreg = /^1[34578]\d{9}$/;
 /**
  * 注册事件
  */
