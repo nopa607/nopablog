@@ -156,7 +156,7 @@ function nameLen(data) {
 
 var codeBtn = $("#authCodeBtn");
 var my_interval;
-my_interval = 60;
+my_interval = 1;
 var timeLeft = my_interval;
 //重新发送计时函数
 var timeCount = function () {
@@ -167,7 +167,7 @@ var timeCount = function () {
             timeCount();
         } else {
             codeBtn.html("重新发送");
-            timeLeft = 60;
+            timeLeft = 1;
             codeBtn.attr('disabled', false);
         }
     }, 1000);
@@ -251,10 +251,6 @@ function checkCode(data) {
             alert("客官，慢点按(⊙o⊙)？");
         }
     });
-    if (data == code) {
-        return true;
-    } else {
-        return false;
-    }
+    return data === code;
 }
 

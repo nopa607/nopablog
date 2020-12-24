@@ -15,10 +15,11 @@ import java.util.Set;
  * @Date: Create in 21:44 2020/12/21
  */
 @Data
-@TableName(value="users")
+@TableName("users")
 public class UsersVOEntity extends UserEntity implements Serializable {
 
     private static final long serialVersionUID = 5912785251256840233L;
+
 
     @TableField(exist = false)
     private Set<RoleVOEntity> roles;

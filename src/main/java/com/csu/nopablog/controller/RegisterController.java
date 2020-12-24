@@ -46,7 +46,7 @@ public class RegisterController {
     }
 
     /**
-     * 检测手机号码的注册状态
+     * 注册页面中检测手机号码的合法性
      *
      * @param phone
      * @return
@@ -75,6 +75,13 @@ public class RegisterController {
         }
     }
 
+
+    /**
+     * 用户注册页面中检测用户名合法性
+     *
+     * @param username
+     * @return
+     */
     @GetMapping("usernameCheck")
     public BlogResponser usernameCheck(String username) {
         //缓存查询
@@ -95,6 +102,45 @@ public class RegisterController {
             } else {
                 return BlogResponser.errorMsg("该用户名已被注册!");
             }
+        }
+    }
+
+
+    /**
+     * 注册页面获取验证码
+     *
+     * @param phone
+     * @return
+     */
+    @GetMapping("getCode")
+    public BlogResponser getCode(String phone) {
+        //todo 验证码模块
+//        String s = smsService.sendMesModel(phone, 0);
+        String s = "OKOK";
+        System.out.println("==============");
+        System.out.println(s);
+        System.out.println("==============");
+        if (s.equals("OKOK")) {
+            redisOperator.set(Constant.USER_PHONE_CODE, "OKOK");
+//            redisOperator.set(Constant.USER_PHONE_CODE, s.toString());
+            return BlogResponser.ok();
+        } else {
+            return BlogResponser.errorMsg("获取验证码失败");
+        }
+    }
+
+
+    /**
+     * 校验验证码的准确性
+     * @param phone
+     * @return
+     */
+    @GetMapping("getCodeReflush")
+    public BlogResponser getCodeReflush(String phone) {
+        if (redisOperator.hasKey(Constant.USER_PHONE_CODE)) {
+            return BlogResponser.ok(redisOperator.get(Constant.USER_PHONE_CODE));
+        } else {
+            return BlogResponser.errorMsg("验证码错误!");
         }
     }
 

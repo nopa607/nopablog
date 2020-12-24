@@ -7,6 +7,8 @@ import com.csu.nopablog.entity.VO.UsersVOEntity;
 import com.csu.nopablog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author: nopa
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class UserImpl implements UserService {
 
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
 
     @Override
     public UserEntity findUserMess(String username) {
@@ -28,6 +30,13 @@ public class UserImpl implements UserService {
 
     @Override
     public UsersVOEntity findUsersByPhone(String phone) {
-        return null;
+        System.out.println("serin");
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        UserEntity userEntity =  userDao.selectOne(queryWrapper.eq("phone", phone));
+        UsersVOEntity usersVOEntity = new UsersVOEntity();
+
+        System.out.println(userEntity.toString());
+        return usersVOEntity;
     }
+
 }

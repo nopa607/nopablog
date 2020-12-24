@@ -109,11 +109,22 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterFactoryBean shiroFilter() {
         ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
-//        bean.setSecurityManager(securityManager());
-        AuthRealm realm = new AuthRealm();
-        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(realm);
-        bean.setSecurityManager(securityManager);
+
+//        //虽然和下面的方法是一样的，但是下面的方法会创建bean，从而可以使用依赖的dao和service，这会影响登录等等功能
+//        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+//        CustomSessionManager customSessionManager = new CustomSessionManager();
+//        customSessionManager.setGlobalSessionTimeout(60 * 1000 * 60 * 24);
+//        customSessionManager.setSessionDAO(redisSessionDAO());
+//        securityManager.setSessionManager(customSessionManager);
+//        securityManager.setCacheManager(redisCacheManager());
+//        AuthRealm authRealm = new AuthRealm();
+//        authRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+//        securityManager.setRealm(authRealm);
+//        bean.setSecurityManager(securityManager);
+
+        bean.setSecurityManager(securityManager());
+
+
         //设置默认拦截无登录用户的跳转页面
         bean.setLoginUrl("login");
         //无资源权限时(未授权)跳转的页面

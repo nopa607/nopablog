@@ -39,7 +39,7 @@ nopaBlog:
 ######################################
 logging:
   level:
-    root: warn
+    root: debug
     com.qiang.modules.sys.dao: trace
   pattern:
     console: '%p%m%n'

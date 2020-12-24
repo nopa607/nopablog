@@ -16,10 +16,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @Author: nopa
@@ -66,17 +63,17 @@ public class UserController {
      * @param session
      * @return
      */
-    @GetMapping("toLogin")
-    public BlogResponser toLogin(@RequestParam("phone") String phone,
+    @GetMapping("loginUser")
+    public BlogResponser loginUser(@RequestParam("phone") String phone,
                                  @RequestParam("password") String password,
                                  Session session) {
         UsernamePasswordToken token = new UsernamePasswordToken(phone, password);
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(token);
-            UsersVOEntity user = (UsersVOEntity) subject.getPrincipal();
-            user.setPassword("");
-            session.setAttribute("user", user);
+            String username = (String) subject.getPrincipal();
+//            user.setPassword("");
+//            session.setAttribute("user", username);
             return BlogResponser.ok();
         } catch (AuthenticationException e) {
             return BlogResponser.errorMsg("输入的用户名或密码错误");

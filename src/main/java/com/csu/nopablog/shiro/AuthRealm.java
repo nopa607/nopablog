@@ -1,6 +1,9 @@
 package com.csu.nopablog.shiro;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.csu.nopablog.dao.UserDao;
 import com.csu.nopablog.entity.PermissionEntity;
+import com.csu.nopablog.entity.UserEntity;
 import com.csu.nopablog.entity.VO.RoleVOEntity;
 import com.csu.nopablog.entity.VO.UsersVOEntity;
 import com.csu.nopablog.service.UserService;
@@ -12,6 +15,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -25,6 +29,9 @@ public class AuthRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserDao userDao;
 
     /**
      * 鉴权
@@ -72,15 +79,21 @@ public class AuthRealm extends AuthorizingRealm {
         UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken) authenticationToken;
         //获取前端输入的手机号
         String phone = usernamePasswordToken.getUsername();
-
         UsersVOEntity vo = null;
+
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        UserEntity userEntity =  userDao.selectOne(queryWrapper.eq("phone", phone));
         try {
-            vo = userService.findUsersByPhone(phone);
+            System.out.println("invo1");
+            System.out.println(phone);
+//            vo = userService.findUsersByPhone(phone);
+            System.out.println("invo2");
             //当前realm对象的name
             String realmName = getName();
+            System.out.println("realmName:" + realmName);
             //盐值
-            ByteSource credentialsSalt = ByteSource.Util.bytes(vo.getPhone());
-            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(vo, vo.getPassword(), credentialsSalt, realmName);
+            ByteSource credentialsSalt = ByteSource.Util.bytes(phone);
+            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(phone, usernamePasswordToken.getPassword(), credentialsSalt, realmName);
             return info;
         } catch (NullPointerException e) {
             throw new UnknownAccountException("该手机号不存在！");

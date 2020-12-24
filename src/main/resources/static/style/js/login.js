@@ -4,6 +4,7 @@ qzLogin.click(function () {
     log();
 });
 
+//todo 记住密码
 
 function log(){
     var phone = $("#username").val().trim();
